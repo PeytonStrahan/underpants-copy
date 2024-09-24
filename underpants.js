@@ -21,6 +21,10 @@ var _ = {};
 *   _.identity({a: "b"}) === {a: "b"}
 */
 
+_.identity = function(value) {
+    //return the inputted value
+    return value;
+}
 
 /** _.typeOf
 * Arguments:
@@ -42,6 +46,18 @@ var _ = {};
 * _.typeOf([1,2,3]) -> "array"
 */
 
+_.typeOf = function(value) {
+    // check if inputted value is array
+    if (Array.isArray(value)) {
+        // return "array" if so
+        return "array";
+    } else if (value === null) { // check if value is null
+        // return "null" if so
+        return "null";
+    }
+    // return type of inputted value
+    return typeof value;
+}
 
 /** _.first
 * Arguments:
@@ -61,6 +77,27 @@ var _ = {};
 *   _.first(["a", "b", "c"], 2) -> ["a", "b"]
 */
 
+_.first = function(array, number) {
+    let newArr = [];
+    // check if inputted array is NOT an array or if number is negative
+    if (!Array.isArray(array) || number < 0) {
+        // return [] if so
+        return [];
+    } else if (!number) { // check if number is falsey value
+        // return first value in array if so
+        return array[0];
+    } else if (number > array.length) { // check if number is bigger than array's length
+        // return array if so
+        return array;
+    } else { // loop through the array until number is reached
+        for (let i = 0; i < number; i++) {
+            // push each item onto newArr
+            newArr.push(array[i]);
+        }
+        // return the new array
+        return newArr;
+    }
+}
 
 /** _.last
 * Arguments:
@@ -80,6 +117,27 @@ var _ = {};
 *   _.last(["a", "b", "c"], 2) -> ["b", "c"]
 */
 
+_.last = function(array, number) {
+    let newArr = [];
+    // check if inputted array is NOT an array or if number is negative
+    if (!Array.isArray(array) || number < 0) {
+        // return [] if so
+        return [];
+    } else if (!number) { // check if number is falsey value
+        // return last value in array if so
+        return array[array.length - 1];
+    } else if (number > array.length) { // check if number is bigger than array's length
+        // return array if so
+        return array;
+    } else { // loop from the number through the array until array.length is reached
+        for (let i = number - 1; i < array.length; i++) {
+            // push each item onto newArr
+            newArr.push(array[i]);
+        }
+        // return the new array
+        return newArr;
+    }
+}
 
 /** _.indexOf
 * Arguments:
@@ -97,6 +155,18 @@ var _ = {};
 *   _.indexOf(["a","b","c"], "d") -> -1
 */
 
+_.indexOf = function(array, value) {
+    // loop through the array
+    for (let i = 0; i < array.length; i++) {
+        // check if current item is equal to value
+        if (array[i] === value) {
+            // return current index if so
+            return i;
+        }
+    }
+    // if loop fails to find match, return -1
+    return -1;
+}
 
 /** _.contains
 * Arguments:
@@ -113,6 +183,18 @@ var _ = {};
 *   _.contains([1,"two", 3.14], "two") -> true
 */
 
+_.contains = function(array, value) {
+    // loop through the array
+    for (let i = 0; i < array.length; i++) {
+        // check if current item is equal to value
+        if (array[i] === value) {
+            // return true if so
+            return true;
+        }
+    }
+    // if loop fails to find match, return false
+    return false;
+}
 
 /** _.each
 * Arguments:
@@ -130,6 +212,20 @@ var _ = {};
 *      -> should log "a" "b" "c" to the console
 */
 
+_.each = function(collection, func) {
+    // if collection is an array
+    if (Array.isArray(collection)) {
+        // loop over each item in collection
+        for (let i = 0; i < collection.length; i++) {
+            func(collection[i], i, collection);
+        }
+    } else { // else it's an object
+        // loop over the collection
+        for (let key in collection) {
+            func(collection[key], key, collection);
+        }
+    }
+}
 
 /** _.unique
 * Arguments:
@@ -207,8 +303,25 @@ var _ = {};
 *   3) return the new array
 * Examples:
 *   _.map([1,2,3,4], function(e){return e * 2}) -> [2,4,6,8]
+    _.map({ a: 1, b: 2, c: 3}, function(e){return e * 2}) => [2,4,6]
 */
 
+_.map = function(collection, func) {
+    const output = [];
+    // if collection is an array
+    if (Array.isArray(collection)) {
+        // loop over each item in collection
+        for (let i = 0; i < collection.length; i++) {
+            output.push(func(collection[i], i, collection));
+        }
+    } else { // else it's an object
+        // loop over the collection
+        for (let key in collection) {
+            output.push(func(collection[key], key, collection));
+        }
+    }
+    return output;
+};
 
 /** _.pluck
 * Arguments:
