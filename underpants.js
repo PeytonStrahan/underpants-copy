@@ -237,6 +237,20 @@ _.each = function(collection, func) {
 *   _.unique([1,2,2,4,5,6,5,2]) -> [1,2,4,5,6]
 */
 
+_.unique = function(array) {
+    // create new empty array called noDupes
+    const noDupes = [];
+    // loop through input array
+    for (let i = 0; i < array.length; i++) {
+        // check if the current item in array is NOT included in the noDupes array
+        if (_.indexOf(noDupes, array[i]) === -1) {
+            // push current item in array onto noDupes if so
+            noDupes.push(array[i]);
+        }
+    }
+    // return the noDupes array
+    return noDupes;
+}
 
 /** _.filter
 * Arguments:
@@ -254,6 +268,19 @@ _.each = function(collection, func) {
 *   use _.each in your implementation
 */
 
+_.filter = function(array, func) {
+    // create new empty array called returnedTrue
+    const returnedTrue = [];
+    // call _.each with the input array and a function
+    _.each(array, function(element, index, collection) {
+        if (func(element, index, collection)) { // check if current element returns true when passed to input func
+            // push current element onto returnedTrue array if so
+            returnedTrue.push(element);
+        }
+    })
+    // return returnedTrue array
+    return returnedTrue;
+}
 
 /** _.reject
 * Arguments:
@@ -268,6 +295,19 @@ _.each = function(collection, func) {
 *   _.reject([1,2,3,4,5], function(e){return e%2 === 0}) -> [1,3,5]
 */
 
+_.reject = function(array, func) {
+    // create new empty array called returnedFalse
+    const returnedFalse = [];
+    // call _.each with the input array and a function
+    _.each(array, function(element, index, collection) {
+        if (!func(element, index, collection)) { // check if current element returns false when passed to input func
+            // push current element onto returnedFalse array if so
+            returnedFalse.push(element);
+        }
+    })
+    // return returnedFalse array
+    return returnedFalse;
+}
 
 /** _.partition
 * Arguments:
@@ -288,6 +328,14 @@ _.each = function(collection, func) {
 }
 */
 
+_.partition = function(array, func) {
+    // create an array of truthy values by calling _.filter
+    const returnedTrue = _.filter(array, func);
+    // create an array of falsey values by calling _.reject
+    const returnedFalse = _.reject(array, func);
+    // return an array containing the two previous arrays
+    return [returnedTrue, returnedFalse];
+}
 
 /** _.map
 * Arguments:
@@ -321,7 +369,7 @@ _.map = function(collection, func) {
         }
     }
     return output;
-};
+}
 
 /** _.pluck
 * Arguments:
@@ -334,6 +382,23 @@ _.map = function(collection, func) {
 *   _.pluck([{a: "one"}, {a: "two"}], "a") -> ["one", "two"]
 */
 
+_.pluck = function(objArray, property) {
+    // return the result of calling _.map with the inputted objArray and a function
+    return _.map(objArray, function(element, index, collection) {
+        // create result variable to store result from _.each
+        let result = null;
+        // call _.each on each element/object in the array with a function that alters the result variable
+        _.each(element, function(value, key, collection) {
+            if (key === property) { // check if current key matches inputted property key
+                // set result variable to current value if so
+                result = value;
+            }
+        })
+        // return result so it can be pushed onto _.map's new output array
+        return result;
+    })
+    
+}
 
 /** _.every
 * Arguments:
@@ -356,6 +421,44 @@ _.map = function(collection, func) {
 *   _.every([1,2,3], function(e){return e % 2 === 0}) -> false
 */
 
+_.every = function(collection, func) {
+    if (Array.isArray(collection)) { // if collection is an array
+        if (!func) { // determine if func is NOT truthy
+            for (let i = 0; i < collection.length; i++) {
+                if (!collection[i]) { // determine if current item is NOT truthy
+                    // return false
+                    return false;
+                }
+            }
+        } else { // else func was provided
+            for (let i = 0; i < collection.length; i++) {
+                if (!func(collection[i], i, collection)) { // determine if the result of invoking func is NOT truthy
+                    // return false
+                    return false;
+                }
+            }
+        }
+
+    } else { // else it's an object
+        if (!func) { // determine if func is NOT truthy
+            for (let key in collection) {
+                if (!collection[key]) { // determine if current item is NOT truthy
+                    // return false
+                    return false;
+                }
+            }
+        } else { // else func was provided
+            for (let key in collection) {
+                if (!func(collection[key], key, collection)) { // determine if the result of invoking func is NOT truthy
+                    // return false
+                    return false;
+                }
+            }
+        }
+    }
+    // return true if all tests pass;
+    return true;
+}
 
 /** _.some
 * Arguments:
