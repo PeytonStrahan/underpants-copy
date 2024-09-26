@@ -481,6 +481,44 @@ _.every = function(collection, func) {
 *   _.some([1,2,3], function(e){return e % 2 === 0}) -> true
 */
 
+_.some = function(collection, func) {
+    if (Array.isArray(collection)) { // if collection is an array
+        if (!func) { // determine if func is NOT truthy
+            for (let i = 0; i < collection.length; i++) {
+                if (collection[i]) { // determine if current item is truthy
+                    // return true
+                    return true;
+                }
+            }
+        } else { // else func was provided
+            for (let i = 0; i < collection.length; i++) {
+                if (func(collection[i], i, collection)) { // determine if the result of invoking func is truthy
+                    // return true
+                    return true;
+                }
+            }
+        }
+
+    } else { // else it's an object
+        if (!func) { // determine if func is NOT truthy
+            for (let key in collection) {
+                if (collection[key]) { // determine if current item is truthy
+                    // return true
+                    return true;
+                }
+            }
+        } else { // else func was provided
+            for (let key in collection) {
+                if (func(collection[key], key, collection)) { // determine if the result of invoking func is truthy
+                    // return true
+                    return true;
+                }
+            }
+        }
+    }
+    // return false if no tests pass;
+    return false;
+}
 
 /** _.reduce
 * Arguments:
@@ -501,6 +539,27 @@ _.every = function(collection, func) {
 *   _.reduce([1,2,3], function(previousSum, currentValue, currentIndex){ return previousSum + currentValue }, 0) -> 6
 */
 
+_.reduce = (array, func, seed) => {
+    // declare previousResult variable
+    let previousResult;
+    // loop through input array
+    for (let i = 0; i < array.length; i++) {
+        // check if previousResult is undefined
+        if (previousResult === undefined) {
+            // if so, check if seed if undefined
+            if (seed === undefined) {
+                // if so, assign seed to the first element in the input array
+                seed = array[0];
+            } else { // otherwise, set previousResult to the result of calling the input function (func) with the seed, current element, and current index
+                previousResult = func(seed, array[i], i);
+            }
+        } else { // otherwise, set previousResult to the result of calling the input function (func) with previousResult, current element, and current index
+            previousResult = func(previousResult, array[i], i);
+        }
+    }
+    // return previousResult
+    return previousResult;
+}
 
 /** _.extend
 * Arguments:
@@ -516,6 +575,19 @@ _.every = function(collection, func) {
 *   _.extend(data, {b:"two"}); -> data now equals {a:"one",b:"two"}
 *   _.extend(data, {a:"two"}); -> data now equals {a:"two"}
 */
+
+_.extend = (arg, ...otherArgs) => {
+    // loop through the inputted otherArgs array
+    for (let i = 0; i < otherArgs.length; i++) {
+        // loop through the current otherArgs object
+        for (let key in otherArgs[i]) {
+            // assign arg[key] to every value in otherArgs[i]
+            arg[key] = otherArgs[i][key];
+        }
+    }
+    // return arg
+    return arg;
+}
 
 //////////////////////////////////////////////////////////////////////
 // DON'T REMOVE THIS CODE ////////////////////////////////////////////
